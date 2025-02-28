@@ -31,12 +31,19 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAut
             // Extract the token from the Authorization header
             String token = exchange.getRequest().getHeaders().getFirst("Authorization");
 
+            if (token == null || !token.startsWith("Bearer ")) {
+                exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+                return exchange.getResponse().setComplete();
+            }
+
+            token = token.substring(7); // Remove "Bearer " prefix
+
+            // Log the token for debugging
+            System.out.println("Received Token: " + token);
+
             // Validate token if it's present and correctly formatted
-            if (token != null && token.startsWith("Bearer ")) {
-                token = token.substring(7); // Remove "Bearer " prefix
-                if (tokenProvider.validateToken(token)) {
-                    return chain.filter(exchange); // Token is valid, proceed with the request
-                }
+            if (tokenProvider.validateToken(token)) {
+                return chain.filter(exchange); // Token is valid, proceed with the request
             }
 
             // If no valid token, reject the request
@@ -44,6 +51,7 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAut
             return exchange.getResponse().setComplete();
         };
     }
+
 
     public static class Config {
         // Add configuration properties here if necessary
