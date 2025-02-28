@@ -1,4 +1,5 @@
 package com.myKcc.com.API_Gateway_Service.config;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
@@ -21,23 +22,30 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAut
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
             String path = exchange.getRequest().getURI().getPath();
-            if (path.startsWith("/api/login") || path.startsWith("/api/login/users") && path.startsWith("/api/login/users/delete/{id}")) {
-                // Allow access to the login endpoint
+
+            // Allow access to the login routes
+            if (path.startsWith("/api/login") || path.startsWith("/api/login/users") || path.startsWith("/api/login/users/delete")) {
                 return chain.filter(exchange);
             }
 
+            // Extract the token from the Authorization header
             String token = exchange.getRequest().getHeaders().getFirst("Authorization");
-            if (token != null && tokenProvider.validateToken(token.substring(7))) { // Remove "Bearer " prefix
-                return chain.filter(exchange);
-            } else {
-                exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-                return exchange.getResponse().setComplete();
+
+            // Validate token if it's present and correctly formatted
+            if (token != null && token.startsWith("Bearer ")) {
+                token = token.substring(7); // Remove "Bearer " prefix
+                if (tokenProvider.validateToken(token)) {
+                    return chain.filter(exchange); // Token is valid, proceed with the request
+                }
             }
+
+            // If no valid token, reject the request
+            exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+            return exchange.getResponse().setComplete();
         };
     }
 
     public static class Config {
-        // Configuration properties if needed
+        // Add configuration properties here if necessary
     }
 }
-

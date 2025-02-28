@@ -11,7 +11,7 @@ import javax.crypto.SecretKey;
 public class JwtTokenProvider {
 
     // Use a key of appropriate length (e.g., 256 bits for HS256)
-    private final SecretKey secretKey = Keys.hmacShaKeyFor("dgjorufhrsnjdu438fkdj38fdmcv7dm3ckvhrsnjjuwelueivhe848fhedldh5ndk".getBytes()); // Replace with your actual secret key
+    private final SecretKey secretKey = Keys.hmacShaKeyFor("dgjorufhrsnjdu438fkdj38fdmcv7dm3ckvhrsnjjuwelueivhe848fhedldh5ndk".getBytes());
 
     public boolean validateToken(String token) {
         try {
