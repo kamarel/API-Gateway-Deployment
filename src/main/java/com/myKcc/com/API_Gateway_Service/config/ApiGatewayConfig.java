@@ -18,9 +18,14 @@ public class ApiGatewayConfig {
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
         return builder.routes()
-                .route("members-service", r -> r.path("/api/v1/members/**")
+                .route("documents-service", r -> r.path("/api/files/**")
                         .filters(f -> f.filter(addCustomHeaderFilter))  // Use the injected custom filter here
                         .uri("https://strong-alignment-production.up.railway.app"))  // Your actual MEMBERS-SERVICE URI
+
+                .route("members-service", r -> r.path("/api/v1/members/**")
+                        .filters(f -> f.filter(addCustomHeaderFilter))  // Use the injected custom filter here
+                        .uri("http://document-service-production-8e33.up.railway.app"))  // Your actual MEMBERS-SERVICE URI
+
                 .build();
     }
 }
