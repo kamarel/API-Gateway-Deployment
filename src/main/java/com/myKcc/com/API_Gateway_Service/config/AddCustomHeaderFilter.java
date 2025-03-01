@@ -13,7 +13,7 @@ public class AddCustomHeaderFilter implements GatewayFilter {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         // Add the custom header "X-Requested-By: MyApiParish"
         exchange.getRequest().mutate()
-                .header("X-Requested-By", "MyApiParish")
+                .header("X-Requested-By", "MyApiGateway")
                 .build();
 
         // Continue with the filter chain
