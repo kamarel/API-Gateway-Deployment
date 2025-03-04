@@ -16,7 +16,7 @@ public class WebConfig {
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(List.of("http://localhost:4200"));  // Allow only one origin
+        config.setAllowedOrigins(List.of("https://front-end-my-kcc-deployment.vercel.app"));  // Allow only one origin
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
 
