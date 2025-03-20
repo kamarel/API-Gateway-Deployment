@@ -20,7 +20,11 @@ public class ApiGatewayConfig {
         return builder.routes()
                 .route("members-service", r -> r.path("/api/v1/members/**")
                         .filters(f -> f.filter(addCustomHeaderFilter))  // Use the injected custom filter here
-                        .uri("https://strong-alignment-production.up.railway.app"))  // Your actual MEMBERS-SERVICE URI
+                        .uri("https://strong-alignment-production.up.railway.app"))
+
+                .route("parish-service", r -> r.path("api/parish/**")
+                        .filters(f -> f.filter(addCustomHeaderFilter))  // Use the injected custom filter here
+                        .uri("https://worthy-stillness-production.up.railway.app"))  // Your actual MEMBERS-SERVICE URI
 
                 .build();
     }
